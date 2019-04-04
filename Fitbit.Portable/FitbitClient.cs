@@ -1094,25 +1094,39 @@ namespace Fitbit.Api.Portable
             return fitbitResponse;
         }
 
-        /// <summary>
-        /// Requests the Heart Rate Time Series for a specific time period.
-        /// </summary>
-        /// <param name="date">The end date of the period specified.</param>
-        /// <param name="dateRangePeriod">The range for which data will be returned.</param>
-        /// <param name="userId">The encoded ID of the user.</param>
-        /// <returns></returns>
-        public async Task<HeartActivitiesTimeSeries> GetHeartRateTimeSeries(DateTime date, DateRangePeriod dateRangePeriod, string userId = "-")
+		/// <summary>
+		/// Requests the Heart Rate Time Series for a specific date range.
+		/// </summary>
+		/// <param name="startDate">The start date of the period specified.</param>
+		/// <param name="endDate">The end date of the period specified.</param>
+		/// <param name="userId">The encoded ID of the user.</param>
+		/// <returns></returns>
+		public async Task<HeartActivitiesTimeSeries> GetHeartRateDateRangeTimeSeries(DateTime startDate, DateTime endDate, string userId = "-")
         {
-            string url = "1.1/user/{0}/" + "activities/heart/date/" + date.ToString("yyyy-MM-dd") + "/"+dateRangePeriod.GetStringValue() + ".json";
+            string url = "1.1/user/{0}/" + "activities/heart/date/" + startDate.ToString("yyyy-MM-dd") + "/"+ endDate.ToString("yyyy-MM-dd") + ".json";
             string apiCall = FitbitClientHelperExtensions.ToFullUrl(url, userId);
             return await ProcessHeartRateTimeSeries(apiCall);
         }
 
-        #endregion
-        
-        #region HeartRateIntraday
+	    /// <summary>
+	    /// Requests the Heart Rate Time Series for a specific time period.
+	    /// </summary>
+	    /// <param name="date">The end date of the period specified.</param>
+	    /// <param name="dateRangePeriod">The range for which data will be returned.</param>
+	    /// <param name="userId">The encoded ID of the user.</param>
+	    /// <returns></returns>
+	    public async Task<HeartActivitiesTimeSeries> GetHeartRateTimeSeries(DateTime date, DateRangePeriod dateRangePeriod, string userId = "-")
+	    {
+		    string url = "1.1/user/{0}/" + "activities/heart/date/" + date.ToString("yyyy-MM-dd") + "/" + dateRangePeriod.GetStringValue() + ".json";
+		    string apiCall = FitbitClientHelperExtensions.ToFullUrl(url, userId);
+		    return await ProcessHeartRateTimeSeries(apiCall);
+	    }
 
-        private async Task<HeartActivitiesIntraday> ProcessHeartRateIntradayTimeSeries(DateTime date, string url)
+		#endregion
+
+		#region HeartRateIntraday
+
+		private async Task<HeartActivitiesIntraday> ProcessHeartRateIntradayTimeSeries(DateTime date, string url)
         {
             HttpResponseMessage response = await HttpClient.GetAsync(url);
             await HandleResponse(response);
